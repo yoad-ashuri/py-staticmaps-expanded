@@ -16,6 +16,7 @@ class TileProvider:
         api_key: typing.Optional[str] = None,
         attribution: typing.Optional[str] = None,
         max_zoom: int = 24,
+        tile_size: typing.Optional[int] = 256,
     ) -> None:
         self._name = name
         self._url_pattern = string.Template(url_pattern)
@@ -23,6 +24,7 @@ class TileProvider:
         self._api_key = api_key
         self._attribution = attribution
         self._max_zoom = max_zoom if ((max_zoom is not None) and (max_zoom <= 20)) else 20
+        self._tile_size = tile_size
 
     def set_api_key(self, key: str) -> None:
         """Set an api key
@@ -48,14 +50,14 @@ class TileProvider:
         """
         return self._attribution
 
-    @staticmethod
-    def tile_size() -> int:
+    # @staticmethod
+    def tile_size(self) -> int:
         """Return the tile size
 
         :return: tile size
         :rtype: int
         """
-        return 256
+        return self._tile_size
 
     def max_zoom(self) -> int:
         """Return the maximum zoom of the tile provider
