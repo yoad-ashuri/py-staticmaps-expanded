@@ -2,7 +2,7 @@
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import math
-
+from PIL import Image
 import s2sphere  # type: ignore
 
 from .color import Color, RED
@@ -138,3 +138,14 @@ class Marker(Object):
         renderer.context().line_to(x + dx * (r - 1), y - 2 * r + dy * (r - 1))
         renderer.context().close_path()
         renderer.context().fill()
+
+class ImageMarker(Marker):
+    def __init__(self, coord, image_path, anchor=None):
+        super().__init__(coord)
+        self.image = Image.open(image_path)
+        self.anchor = anchor if anchor else (self.image.width // 2, self.image.height)
+
+    def draw(self, painter, projection):
+        x, y = projection.from_coords(self.coord)
+        painter.paste(self.image, (x - self.anchor[0], y - self.anchor[1]), self.image)
+
